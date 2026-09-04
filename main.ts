@@ -1,15 +1,23 @@
-let buttonAbout = {
-    a: { onclick: false, clickTimes: 0 },
-    b: { onclick: false, clickTimes: 0 },
+let buttonAbout={
+    a:{onclick:false,clickTimes:0},
+    b:{onclick:false,clickTimes:0},
 }
-let nowAbout = {
-    function_onPlay: false,
+type l5a=[number,number,number,number,number]
+type nowAboutStructure={
+    function_onPlay:boolean,
+    mode:number,
+    screen:[l5a,l5a,l5a,l5a,l5a]
+}
+let nowAbout:nowAboutStructure={
+    function_onPlay:false,
+    mode:0,
+    screen:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
 }
 function move_reset() {
-    nowAbout.function_onPlay = false
+    nowAbout.function_onPlay=false
 }
 function move_start() {
-    nowAbout.function_onPlay = true
+    nowAbout.function_onPlay=true
 }
 class Write {
     constructor() {
@@ -33,16 +41,20 @@ class Write {
 const write = new Write()
 const sleep = function (ms: number) { basic.pause(ms) }
 basic.forever(function () {
-    write.point([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [buttonAbout.a.onclick, 0, 0, 0, buttonAbout.b.onclick], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
+    write.point([[0,0,0,0,0],[0,0,0,0,0],[buttonAbout.a.onclick,0,0,0,buttonAbout.b.onclick],[0,0,0,0,0],[0,0,0,0,0]])
     if (buttonAbout.a.clickTimes > 2000 && buttonAbout.b.clickTimes > 2000 && !(nowAbout.function_onPlay)) {
-        move_start()
-        write.point([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [1, 0, 1, 0, 1], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
-        while (/*!*/(buttonAbout.a.onclick) && /*!*/(buttonAbout.b.onclick)) {
-            basic.pause(50)
+        write.point([[0,0,0,0,0],[0,0,0,0,0],[1,0,1,0,1],[0,0,0,0,0],[0,0,0,0,0]])
+        while(buttonAbout.a.onclick||buttonAbout.b.onclick){
+            basic.pause(100)
         }
-        move_reset()
-        write.point([[0, 0, 1, 0, 0], [0, 0, 1, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 0, 0], [0, 0, 1, 0, 0]])
+        write.clear()
+        move_start()
+        write.point([[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]])
         sleep(1000)
+        write.point([[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]])
+        sleep(1000)
+        nowAbout.mode=0
+        move_reset()
     }
 })
 basic.forever(function () {
